@@ -4,7 +4,7 @@
     @ Description: Base on RAG System, we can build a knowledge base for contract information. 
 '''
 
-from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi import FastAPI, File, UploadFile, HTTPException,Form
 from typing import List
 from pydantic import BaseModel
 import os
@@ -21,7 +21,6 @@ class RagInputParams(BaseModel):
     top_k: int = 10
     temperature: float = 0.0
 
-
 ############################################
 # @ function: upload file
 # @ input: file
@@ -29,7 +28,7 @@ class RagInputParams(BaseModel):
 # @ description: upload file to local directory and return file text content as list of string
 ############################################
 @app.post("/upload/")
-async def upload_file(file: UploadFile = File(...)):
+async def upload_file(file: UploadFile = File(...),user_item= Form(...)):
     allowed_types=["application/pdf"]
     if file.content_type not in allowed_types:
         raise HTTPException(status_code=400, detail=f"Unsupported file provided, Allowed types are: {', '.join(allowed_types)}")
@@ -44,6 +43,7 @@ async def upload_file(file: UploadFile = File(...)):
         with pdfplumber.open(file_path) as pdf:
             for page in pdf.pages:
                 file_content+=page.extract_text().split("\n")
+        print(user_item.user_id)
         return file_content 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error while uploading file: {str(e)}")
