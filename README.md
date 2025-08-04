@@ -17,3 +17,5 @@ Complete the file upload process, extract its contents, generate embeddings, and
 }
 '''
 
+## 20250804 Updates
+This project leverages the BGE (BAAI General Embedding) model to generate text embeddings, which are then stored and indexed in Qdrant vector database. The system enables efficient semantic search and retrieval of relevant information, which is subsequently used to generate accurate answers to user queries.
